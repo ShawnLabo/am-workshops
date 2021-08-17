@@ -9,13 +9,13 @@ App Modernization Workshops
 
 https://github.com/ShawnLabo/am-workshops/tree/main/container-basic
 
-[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FShawnLabo%2Fam-workshops.git&cloudshell_workspace=container-basic&cloudshell_tutorial=container-basic%2Fdocker-handson.md)
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FShawnLabo%2Fam-workshops.git&cloudshell_workspace=container-basic&cloudshell_tutorial=docker-handson.md)
 
 ### 2. Cloud Run Basics
 
 https://github.com/ShawnLabo/am-workshops/tree/main/cloud-run-basic
 
-[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FShawnLabo%2Fam-workshops.git&cloudshell_workspace=cloud-run-basic&cloudshell_tutorial=cloud-run-basic%2Ftutorial.md)
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FShawnLabo%2Fam-workshops.git&cloudshell_workspace=cloud-run-basic&cloudshell_tutorial=tutorial.md)
 
 ## References
 
