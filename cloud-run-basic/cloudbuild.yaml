@@ -1,0 +1,15 @@
+steps:
+# コンテナイメージのビルド
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/web-db:$SHORT_SHA', 'cloud-run-basic/web-db']
+# コンテナイメージをContainer Registryへpush
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/web-db:$SHORT_SHA']
+# Cloud Runのデプロイ
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'web-db', '--image', 'gcr.io/$PROJECT_ID/web-db:$SHORT_SHA', '--region', 'asia-northeast1', '--platform', 'managed', '--allow-unauthenticated']
+# Cloud RunのLATESTヘルーティング
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'services', 'update-traffic', '--to-latest', 'web-db', '--region', 'asia-northeast1', '--platform', 'managed']
+images:
+- gcr.io/$PROJECT_ID/web-db:$SHORT_SHA

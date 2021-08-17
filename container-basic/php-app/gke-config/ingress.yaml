@@ -1,0 +1,17 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: container-handson-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: container-handson
+          servicePort: 8080
+      - path: /php/*
+        backend:
+          serviceName: php-app
+          servicePort: 80
