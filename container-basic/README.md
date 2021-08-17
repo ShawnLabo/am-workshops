@@ -12,7 +12,7 @@ Google Cloud ワークショップ - コンテナ入門
 
 ## 開始する
 
-**Cloud Shell で開く** をクリックしてハンズオンを開始してください。
+次の **OPEN IN GOOGLE CLOUD SHELL** ボタンをクリックしてハンズオンを開始してください。
 
-[![Cloud Shell で開く](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FShawnLabo%2Fam-workshops.git&cloudshell_workspace=container-basic&cloudshell_tutorial=docker-handson.md)
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FShawnLabo%2Fam-workshops.git&cloudshell_workspace=container-basic&cloudshell_tutorial=docker-handson.md)
 
