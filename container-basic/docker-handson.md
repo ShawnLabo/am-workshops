@@ -306,9 +306,7 @@ Cloud Shell タブの上部の [エディタを開く] をクリックして、�
 左側のフォルダツリーから、ディレクトリを移動します。
 
 ```
-gcp-handson/
-  -> container-basic/
-    -> python-app/
+python-app/
 ```
 
 - main.py
@@ -326,11 +324,11 @@ gcp-handson/
 先ほど確認した `Dockerfile` を使って、`docker build` コマンドからコンテナをビルドしてみましょう。
 
 ```bash
-cd ~/gcp-handson/container-basic/python-app/
+cd ~/cloudshell_open/am-workshops-1/container-basic/python-app/
 docker build -t python-app .
 ```
 
-コンテナの名前は `python-app` としています。
+コンテナイメージの名前を `python-app` としています。
 
 ### ビルドしたコンテナを実行
 
@@ -344,6 +342,7 @@ docker run -d -p 8080:8080 --name python-app --rm python-app
 ### CloudShell の機能を利用して、起動したアプリケーションにアクセス
 
 画面右上にあるアイコン <walkthrough-web-preview-icon></walkthrough-web-preview-icon> をクリックし、"プレビューのポート: 8080"を選択します。
+Nginxのページが表示される場合はリロードしてください。
 
 
 ### 前と同様の手順でログを確認
