@@ -614,6 +614,26 @@ Hello, GCP と表示されることを確認してください。
 
 <walkthrough-footnote>自分でビルドして Artifact Registry に Push したイメージを docker-vm で起動してアクセスできることが確認できました。</walkthrough-footnote>
 
+## クリーンアップ
+
+追加の課金を避けるため、作成したプロジェクトを削除します。
+作成したリソースを個別に削除する場合は、こちらのページの手順を実施せずに次のページに進んで下さい。
+
+### デフォルトプロジェクト設定の削除
+
+```bash
+gcloud config unset project
+```
+
+### プロジェクトの削除
+
+```bash
+gcloud projects delete {{project-id}}
+```
+
+プロジェクトの削除には適切な権限が必要です。
+削除できない場合は、オーナー権限のアカウントをお持ちの方に依頼してください。
+
 ## Congraturations!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
