@@ -46,22 +46,12 @@ gcloud コマンドライン インターフェースは、GCP でメインと�
 
 ## gcloud コマンドラインツール設定 - プロジェクト
 
-gcloud コマンドでは操作の対象とするプロジェクトの設定が必要です。
+gcloud コマンドでは操作の対象とするプロジェクトの指定が必要です。
 
-### GCP のプロジェクト ID を環境変数に設定
-
-環境変数 `GOOGLE_CLOUD_PROJECT` に GCP プロジェクト ID を設定します。
+gcloudのデフォルトプロジェクトとして、操作対象のプロジェクトを設定しておきます。
 
 ```bash
-export GOOGLE_CLOUD_PROJECT="{{project-id}}"
-```
-
-### CLI（gcloud コマンド） から利用する GCP のデフォルトプロジェクトを設定
-
-操作対象のプロジェクトを設定します。
-
-```bash
-gcloud config set project $GOOGLE_CLOUD_PROJECT
+gcloud config set project {{project-id}}
 ```
 
 <walkthrough-footnote>これで、gcloud コマンドを実行する際に、毎回プロジェクトを指定しなくて済むようになりました。続いて、API の有効化を行います。</walkthrough-footnote>
@@ -408,12 +398,13 @@ docker push asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/contai
 
 <walkthrough-tutorial-duration duration=15></walkthrough-tutorial-duration>
 
-今度は、CloudShell 上ではなく、仮想マシン（Google Compute Engine）を作成し、そこに Docker / docker-compose の実行環境を作成して、コンテナを実行してみましょう。
+今度は、Cloud Shell 上ではなく、仮想マシン（Google Compute Engine）を作成し、そこに Docker と Docker Compose の実行環境を作成して、コンテナを実行してみましょう。
 
 - 仮想マシンの作成
-- 仮想マシンへの Docker / docker-compose のインストール
-- docker-compose による Wordpress アプリの実行
-- コンテナレジストリに登録したコンテナイメージの実行
+- 仮想マシンへの Docker のインストール
+- 仮想マシンへの Docker Compose のインストール
+- docker-compose による WordPress アプリの実行
+- Artifact Registryに Push したコンテナイメージの実行
 
 ## Google Compute Engine で仮想マシンの作成
 
@@ -431,6 +422,7 @@ gcloud compute instances create \
   --image-project=ubuntu-os-cloud \
   --tags=http-server \
   --metadata=startup-script-url=https://raw.githubusercontent.com/ShawnLabo/am-workshops/main/container-basic/startup-script.sh \
+  --zone asia-northeast1-c \
   docker-vm
 ```
 
@@ -468,9 +460,10 @@ gcloud compute firewall-rules create allow-ssh-ingress-from-iap \
 
 ターミナルが2つになり、タブをクリックすることで、切り替えることができます
 
-### 新しいタブで、gcloud のデフォルトのゾーンを改めて設定
+### 新しいタブで、プロジェクトとデフォルトのゾーンを改めて設定
 
 ```bash
+gcloud config set project {{project-id}}
 gcloud config set compute/zone asia-northeast1-c
 ```
 
