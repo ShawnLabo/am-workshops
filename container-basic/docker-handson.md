@@ -437,53 +437,49 @@ gcloud compute firewall-rules create allow-ssh-ingress-from-iap \
 
 ### ターミナルのタブの [+]マークをクリックして、もうひとつターミナルを開く
 
-ターミナルが2つになり、タブをクリックすることで、切り替えることができます
+ターミナルが2つになり、タブをクリックすることで切り替えることができます
 
-### 新しいタブで、プロジェクトとデフォルトのゾーンを改めて設定
+### 新しいタブでデフォルトプロジェクトを改めて設定
 
 ```bash
 gcloud config set project {{project-id}}
-gcloud config set compute/zone asia-northeast1-c
 ```
 
 ### gcloud コマンドを利用した SSH 接続
 
-<!-- `--tunnel-through-iap` オプションを指定することで、IAP 経由で安全に SSH 接続が可能です。
-
 ```bash
-gcloud compute ssh docker-vm --tunnel-through-iap
-``` -->
-
-```bash
-gcloud compute ssh docker-vm
+gcloud compute ssh docker-vm --zone asia-northeast1-c
 ```
 
 最初にsshのキーのパスワードを設定しますので、適当なパスワードを設定してください。
 
-※ 今後、docker-vm（GCE）上で実行するコマンドは、[GCE] というタグをSubjectにつけています。
+以降、docker-vm （GCE） で実行するコマンドには`docker-vm`、Cloud Shell で実行するコマンドは `Cloud Shell` というコメントをつけています。
 
-## Docker / docker-compose のインストール
+## Docker / Docker Compose のインストール
 
-### [GCE] docker.io と vim パッケージ
+### Docker インストール
 
 ```bash
-sudo apt update; sudo apt install -y docker.io vim
+# docker-vm
+sudo apt update
+sudo apt install -y docker.io
 ```
 
-dockerdを起動します
+Docker を起動します
 
 ```bash
 sudo systemctl start docker
 ```
 
-### docker-compose
+### Docker Compose インストール
 
 ```bash
+# docker-vm
 sudo curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-### docker / docker-compose の動作確認
+### 動作確認
 
 `docker` コマンドが正常に実行できることを確認します。
 
@@ -504,81 +500,92 @@ docker-compose version
 <walkthrough-footnote>以上で、仮想マシン上でコンテナを実行する準備が整いました。</walkthrough-footnote>
 
 
-## WordPressアプリケーションを、docker-composeで起動
+## Docker Compose で WordPress を起動
 
-### [GCE] docker-compose.yamlの確認
+### docker-compose.yamlの確認
 
-今回は、仮想マシン作成時に startup script を指定することにより、自動的に `/tmp/wordpress-app` に `docker-compose.yaml` を準備しています。
+今回は、[起動スクリプト](https://cloud.google.com/compute/docs/startupscript?hl=ja)によって `/tmp/wordpress-app` に `docker-compose.yaml` を作成しています。
 
 内容を確認します。
 
 ```bash
+# docker-vm
 cd /tmp/wordpress-app/
 cat docker-compose.yaml
 ```
 
-### [GCE] docker-compose で複数のコンテナを一気に起動
+`mysql`コンテナと`wordpress`コンテナの設定が書かれていることを確認してください。
+
+### WordPress の起動
 
 ```bash
+# docker-vm
 sudo docker-compose up -d
 ```
 
-※ 現在ログイン中のユーザでは、dockerd の unix ドメインソケットに接続できないため、`sudo` をつけます
+※ `sudo` なしで `docker` コマンドを実行できるように設定することも可能です
 
-### [GCE] コンテナの起動を確認
+### コンテナの状態を確認
 
 ```bash
+# docker-vm
 sudo docker-compose ps
 ```
 
-wordpress と mysql の Official イメージを pull して実行されていることがわかります。
+`mysql`コンテナと`wordpress`コンテナの2つが起動している (`Up` になっている) ことがわかります。
 
 
-## WordPress への Web アクセス確認
+## WordPress の動作確認
 
-### 仮想マシンの URL を取得して Web アクセス
+### WordPress にアクセス
 
-**CloudShell のタブを元の方に切り替えてから**、以下のコマンドで仮想マシンの IP アドレスを取得して、URL を表示します。
+**Cloud Shell のタブを元の方に切り替えてから**、以下のコマンドで docker-vm の IP アドレスを取得して、WordPress の URL を表示します。
 
 ```bash
-WWW=$(gcloud compute instances describe docker-vm --format=json | jq .networkInterfaces[].accessConfigs[].natIP -r)
+# Cloud Shell
+WWW=$(gcloud compute instances describe docker-vm --zone asia-northeast1-c --format=json | jq .networkInterfaces[].accessConfigs[].natIP -r)
 echo http://$WWW:8000
 ```
 
-URLをクリックしてアクセスして、WordPress のセットアップ画面が表示されることを確認してください。
+URLをクリックしてください。
+WordPress の初期設定画面が表示されることを確認してください。
 
-### [GCE] 確認が終わったら停止
+### WordPress の停止
 
-`docker-vm` に SSH しているタブに戻って、下記を実行してコンテナを停止します。
+動作確認ができたら、`docker-vm` に SSH しているタブに戻ってコンテナを停止します。
 
 ```bash
+# docker-vm
 cd /tmp/wordpress-app
 sudo docker-compose down
 ```
 
 <walkthrough-footnote>docker-compose で DockerHub から取得したイメージを実行してみました。続いて、先ほど Artifact Registry に登録した独自コンテナイメージを実行してみましょう。</walkthrough-footnote>
 
-## コンテナレジストリに保存した python-app を実行
+## Artifact Registry に保存した python-app を実行
 
-### docker-vm で使われるサービスアカウントに Artifact Registry の権限を付与
+### docker-vm に Artifact Registry の権限を付与
 
-docker-vm から Artifact Registry に対して `docker pull` する場合、Compute Engine 用に作成されたサービスアカウントに、Artifact Registry の読み取り権限を付与する必要があります。
+docker-vm から Artifact Registry に対して `docker pull` できるように権限を付与する必要があります。
+今回は、Compute Engine のサービスアカウントに、Artifact Registry の読み取り権限を付与します。
 
-**CloudShell のタブを元の方に切り替えてから**、以下のコマンドを実行して、権限の付与を行います。
+**Cloud Shell のタブに切り替えてください**
 
 ```bash
-SERVICE_ACCOUNT=$(gcloud compute instances describe docker-vm --format=json | jq .serviceAccounts[].email -r)
+# Cloud Shell
+SERVICE_ACCOUNT=$(gcloud compute instances describe docker-vm --zone asia-northeast1-c --format=json | jq .serviceAccounts[].email -r)
 gcloud projects add-iam-policy-binding {{project-id}} \
 --member="serviceAccount:$SERVICE_ACCOUNT" --role='roles/artifactregistry.reader'
 ```
 
 **GUI**: [IAM](https://console.cloud.google.com/iam-admin/iam?project={{project-id}}&supportedpurview=project)
 
-### [GCE] docker-vm から Artifact Registry を利用するための設定
+### docker-vm から Artifact Registry を利用するための設定
 
-docker-vm に SSH しているタブに戻って、下記を実行してください
+**docker-vm のタブに切り替えてください**
 
 ```bash
+# docker-vm
 sudo gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 ```
 
@@ -586,44 +593,29 @@ Do you want to continue (Y/n)?
 
 と聞かれたら、yを入力してください
 
-### [GCE] コンテナを pull して実行
+### python-app コンテナの実行
 
 ```bash
 sudo docker run -d -p 80:8080 --restart always asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/container-handson:v1
 ```
 
+### python-app の動作確認
 
-### python-app へのアクセスを確認
+**Cloud Shell のタブに切り替えてください**
 
-現在のタブを、もう片方（CloudShell）に切り替えてください。
-IPアドレスを取得して、URLを表示します。
+docker-vm の IP アドレスを取得して URL を表示します。
 
 ```bash
 echo http://$WWW
 ```
 
-仮想マシンの 80 番ポートで、python-app のアプリに接続できることが確認できました。
+表示された URL をクリックしてください。
+Hello, GCP と表示されることを確認してください。
+
+<walkthrough-footnote>自分でビルドして Artifact Registry に Push したイメージを docker-vm で起動してアクセスできることが確認できました。</walkthrough-footnote>
 
 ## Congraturations!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 これにて コンテナ入門のハンズオンは完了です！！
 
-<!-- ## クリーンアップ（プロジェクトを削除）
-
-作成したリソースを個別に削除する場合は、こちらのページの手順を実施せずに次のページに進んで下さい。
-
-### GCP のデフォルトプロジェクト設定の削除
-
-```bash
-gcloud config unset project
-```
-
-### プロジェクトの削除
-```bash
-gcloud projects delete {{project-id}}
-```
-
-プロジェクトの削除には適切な権限が必要です。
-削除できない場合は、オーナー権限のアカウントをお持ちの方に依頼してください。
- -->
