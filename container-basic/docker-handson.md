@@ -378,8 +378,13 @@ docker push asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/contai
 コンテナイメージを Artifact Registry に保存できました。
 これで、Google Kubernetes Engine や Cloud Run、または Google Cloud 外の様々な場所からコンテナイメージを利用できるようになりました。
 
+<!-- ********************************
+*
+* ハンズオン3 WordPress の起動
+*
+******************************** -->
 
-## 仮想マシン上での Docker コンテナの実行
+## WordPress の起動
 
 <walkthrough-tutorial-duration duration=15></walkthrough-tutorial-duration>
 
@@ -451,7 +456,7 @@ gcloud compute ssh docker-vm --zone asia-northeast1-c
 
 最初に SSH キーのパスワードを設定しますので、適当なパスワードを設定してください。
 
-以降、docker-vm （GCE） で実行するコマンドには`[docker-vm]`、Cloud Shell で実行するコマンドは `[Cloud Shell]` というタグをつけています。
+以降、docker-vm （GCE） で実行するコマンドには`[docker-vm]`、Cloud Shell で実行するコマンドは `[Cloud Shell]` というコメントをつけています。
 
 ## Docker / Docker Compose のインストール
 
@@ -461,18 +466,17 @@ gcloud compute ssh docker-vm --zone asia-northeast1-c
 
 Docker をインストールします。
 
-`[docker-vm]`
-
 ```bash
 sudo apt update
 sudo apt install -y docker.io
+# [docker-vm]
 ```
 
 Docker を起動します
 
 ```bash
-# docker-vm
 sudo systemctl start docker
+# [docker-vm]
 ```
 
 ### Docker Compose インストール
