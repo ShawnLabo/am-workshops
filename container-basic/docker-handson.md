@@ -71,31 +71,10 @@ gcloud services enable compute.googleapis.com cloudbuild.googleapis.com sourcere
 
 **GUI**: [APIダッシュボード](https://console.cloud.google.com/apis/dashboard?hl=ja&project={{project-id}})
 
-<walkthrough-footnote>必要な機能が使えるようになりました。次にリージョン・ゾーンの設定を行います。</walkthrough-footnote>
+<walkthrough-footnote>必要な機能が使えるようになりました。以上で環境準備は完了です。</walkthrough-footnote>
 
 
-## gcloud コマンドラインツール設定 - リージョン、ゾーン
-
-### デフォルトリージョンを設定
-
-コンピュートリソースを作成するデフォルトのリージョンとして、日本リージョン（asia-northeast1）を指定します。
-
-```bash
-gcloud config set compute/region asia-northeast1
-```
-
-### デフォルトゾーンを設定
-
-コンピュートリソースを作成するデフォルトのゾーンとして、日本リージョン内の 1 ゾーン（asia-northeast1-c）を指定します。
-
-```bash
-gcloud config set compute/zone asia-northeast1-c
-```
-
-<walkthrough-footnote>以上で環境準備は完了です。</walkthrough-footnote>
-
-
-## CloudShell 上での Docker の基本操作
+## Cloud Shell 上での Docker の基本操作
 
 <walkthrough-tutorial-duration duration=15></walkthrough-tutorial-duration>
 
