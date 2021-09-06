@@ -647,15 +647,15 @@ Hello, GCP と表示されることを確認してください。
 ### デフォルトプロジェクト設定の削除
 
 ```bash
-# Cloud Shell
 gcloud config unset project
+# [Cloud Shell]
 ```
 
 ### プロジェクトの削除
 
 ```bash
-# Cloud Shell
 gcloud projects delete {{project-id}}
+# [Cloud Shell]
 ```
 
 プロジェクトの削除には適切な権限が必要です。
