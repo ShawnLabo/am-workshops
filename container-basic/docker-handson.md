@@ -468,6 +468,7 @@ sudo apt install -y docker.io
 Docker を起動します
 
 ```bash
+# docker-vm
 sudo systemctl start docker
 ```
 
@@ -484,6 +485,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 `docker` コマンドが正常に実行できることを確認します。
 
 ```bash
+# docker-vm
 docker version
 ```
 
@@ -492,6 +494,7 @@ docker version
 続いて、`docker-compose` についても同様に確認してみます。
 
 ```bash
+# docker-vm
 docker-compose version
 ```
 
@@ -596,6 +599,7 @@ Do you want to continue (Y/n)?
 ### python-app コンテナの実行
 
 ```bash
+# docker-vm
 sudo docker run -d -p 80:8080 --restart always asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/container-handson:v1
 ```
 
@@ -606,6 +610,7 @@ sudo docker run -d -p 80:8080 --restart always asia-northeast1-docker.pkg.dev/{{
 docker-vm の IP アドレスを取得して URL を表示します。
 
 ```bash
+# Cloud Shell
 echo http://$WWW
 ```
 
@@ -622,12 +627,14 @@ Hello, GCP と表示されることを確認してください。
 ### デフォルトプロジェクト設定の削除
 
 ```bash
+# Cloud Shell
 gcloud config unset project
 ```
 
 ### プロジェクトの削除
 
 ```bash
+# Cloud Shell
 gcloud projects delete {{project-id}}
 ```
 
