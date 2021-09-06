@@ -15,7 +15,13 @@
 2. Cloud Shell 上での Docker の基本操作：15分
 3. 仮想マシン上での Docker コンテナの実行：15分
 
-## 環境準備
+<!-- ********************************
+*
+* ハンズオン1 環境の準備
+*
+******************************** -->
+
+## ハンズオン1 環境の準備
 
 <walkthrough-tutorial-duration duration=10></walkthrough-tutorial-duration>
 
@@ -74,21 +80,27 @@ gcloud services enable compute.googleapis.com cloudbuild.googleapis.com sourcere
 <walkthrough-footnote>必要な機能が使えるようになりました。以上で環境準備は完了です。</walkthrough-footnote>
 
 
-## Cloud Shell 上での Docker の基本操作
+<!-- ********************************
+*
+* ハンズオン2 Docker の基本操作
+*
+******************************** -->
+
+## Docker の基本操作
 
 <walkthrough-tutorial-duration duration=15></walkthrough-tutorial-duration>
 
-続いて、CloudShell 上で Docker の基本的な操作を実施してみます。
+続いて、Cloud Shell 上で Docker の基本的な操作を実施してみます。
 
 - Docker コンテナの実行
-- Docker コンテナの Immutability（不変性）の確認
+- Docker コンテナイメージの不変性の確認
 - Docker コンテナのビルドと Artiface Registry への登録
 
-## CloudShell 上の Docker の確認
+## Cloud Shell の Docker 環境の確認
 
 ### Docker サービスの起動確認
 
-### まず Docker が起動していることを確認
+### まず Docker サービスが起動していることを確認
 
 serviceコマンドを実行します。
 
@@ -102,46 +114,50 @@ service docker status
 [FAIL] Docker is not running ... failed!
 ```
 
-下記コマンドで起動してください。
+起動していなかった場合は次のコマンドで起動してください。
 
-```
+```bash
 sudo service docker start
 ```
 
 ## docker コマンドの基本的な使い方
 
-### docker コマンドを引数なしで実行
+### docker
 
-dockerのサブコマンドの一覧が出力されます。
+`docker` コマンドを引数なしで実行すると、サブコマンドの一覧が出力されます。
 
 ```bash
 docker
 ```
 
-Cloud Shellにはdockerコマンドの補完の設定がされています。
-
+Cloud Shell には docker コマンドの補完の設定がされています。
 コマンドを途中まで入力してタブを押すことで入力の支援ができます。
 
-### コンテナの起動を確認
+### docker ps
+
+`docker ps` で起動中のコンテナを確認できます。
 
 ```bash
 docker ps
 ```
 
-何も実行中のコンテナはありません。
+今は実行中のコンテナはありません。
 
 ## nginx コンテナの実行
+
+Docker Hub から nginx コンテナイメージをダウンロードして実行します。
 
 ```bash
 docker run -it nginx:1.20
 ```
 
-DockerHub から nginx イメージ（nginx:1.20）が pull されて、フォアグラウンドで nginx コンテナが実行されます。
-標準出力にログの情報が出ています。
+コンテナイメージ（nginx:1.20）が現在のマシン上にない場合は、自動でダウンロード (`docker pull`) します。
+そして、フォアグラウンドで nginx コンテナが実行されます。
+標準出力にログが出力されます。
 
-このままではWebサーバとして機能しないので、`Ctrl+c` を数回押して停止します。
+一旦 `Ctrl + C` を数回押してコンテナを停止します。
 
-## nginx コンテナのオプション付き実行
+## nginx コンテナをオプション付きで実行
 
 ```bash
 docker run -d -p 8080:80 --name my-nginx --rm nginx:1.20
@@ -150,29 +166,28 @@ docker run -d -p 8080:80 --name my-nginx --rm nginx:1.20
 ここでは下記のオプションを付けています
 
 - `-d`: バックグラウンドで実行します
-- `-p <ホストのポート>`:コンテナのポート: 指定したホストのポートをコンテナのポートに転送します
+- `-p <ホストのポート>:<コンテナのポート>`: 指定したホストのポートをコンテナのポートに転送します
 - `--name <コンテナ名>`: コンテナの名前を指定しています
-- `--rm`: コンテナが終了状態になった時に、コンテナを削除します
+- `--rm`: コンテナが終了状態になった時にコンテナを削除します
 
-キャッシュが利用されるため、起動は高速です。
+今回はすでにコンテナイメージがマシンに存在しているため高速に起動します。
 
-実行後に、起動を確認します。
+`docker ps` で起動していることを確認します。
 
 ```bash
 docker ps
 ```
 
-Cloud Shell のマシン（開発マシン）の TCP ポート `8080` 番を、nginx コンテナの TCP ポート `80` 番に転送していることが確認できます。
+`my-nginx`コンテナが起動していることや、ローカルマシンの TCP ポート `8080` 番を、nginx コンテナの TCP ポート `80` 番に転送していることが確認できます。
 
-## 実行した nginx コンテナへの Web アクセス
+## nginx コンテナの動作確認
 
-### CloudShell の機能を利用し、起動したアプリケーションにアクセス
+### my-nginx コンテナにアクセス
 
-画面右上にあるアイコン <walkthrough-web-preview-icon></walkthrough-web-preview-icon> をクリックし、"プレビューのポート: 8080"を選択します。
+画面右上にあるアイコン <walkthrough-web-preview-icon></walkthrough-web-preview-icon> をクリックして「ポート 8080 でプレビュー」を選択します。
 
-これによりブラウザで新しいタブが開き、Cloud Shell 上で起動しているコンテナにアクセスできます。
-
-正しくアプリケーションにアクセスできると、Nginx のデフォルトのページが確認できます。
+ブラウザで新しいタブが開いて Cloud Shell で実行した `my-nginx` コンテナにアクセスできます。
+正常に動作している場合は Nginx のデフォルトのページが確認できます。
 
 
 ### ログの確認
@@ -183,24 +198,26 @@ Cloud Shell のマシン（開発マシン）の TCP ポート `8080` 番を、n
 docker logs -f my-nginx
 ```
 
-上記のコマンドは `docker ps` でコンテナIDを確認して、それを引数に `logs` サブコマンドを実行しています。
+`my-nginx` で出力されているログが表示されます。
 
-確認後、`Ctrl+c` で停止します
+ 確認できたら `Ctrl + C` で停止します。
 
 <walkthrough-footnote>ここまでで、docker コマンドによるコンテナの実行や、コンテナ内へのポート転送について実施しました。続いて、コンテナの特徴である Immutability（不変性）について、実際に変更を加えて試してみます。</walkthrough-footnote>
 
 
-## コンテナの Immutablility （不変性）を確認
+## コンテナイメージの不変性を確認
+
+コンテナを再作成すると、それまでコンテナに対して行った変更がリセットされてコンテナイメージの初期状態に戻ることを確認します。
 
 ### コンテナの内容を変更
 
-先ほど実行した my-nginx コンテナのシェルにログインします。
+先ほど実行した `my-nginx` コンテナのシェルを起動します。
 
 ```bash
 docker exec -it my-nginx bash
 ```
 
-これで my-nginx コンテナ内のシェル環境にログインできました。
+このシェルで `my-nginx` コンテナの内部を操作できます。
 
 ### コンテナ内で実行されているプロセスを確認
 
@@ -216,27 +233,25 @@ apt update ; apt install -y procps
 ps aux
 ```
 
-数個のプロセスが実行されていることが確認できます。
+`my-nginx` コンテナ内で複数のプロセスが実行されていることが確認できます。
 
-### ログイン後 index.html を変更
+### index.html を変更
+
+`my-nginx` コンテナの `index.html` を書き換えます。
 
 ```bash
 echo "<h1>Test</h1>" > /usr/share/nginx/html/index.html
 ```
 
-`Ctrl+d` でシェルから脱出します。
+`Ctrl + D` でシェルから脱出します。
 
-### Web アクセスして index.html 変更の反映を確認
+### index.html の変更を確認
 
-先ほど <walkthrough-web-preview-icon></walkthrough-web-preview-icon> から開いたプレビューページを再度開き、画面をリロードします。
+先ほど <walkthrough-web-preview-icon></walkthrough-web-preview-icon> から開いたプレビューページを再度開いてリロードします。
 
 ページの内容が 'Test' に変更されていることがわかります。
 
-## コンテナの Immutablility （不変性）を確認（続き）
-
-一時的に手動で変更された index.html の内容について、コンテナを再起動すると、変更が破棄されて nginx コンテナの初期状態に戻ることを確認します。
-
-### コンテナを停止してから再度実行
+### my-nginx コンテナの再作成
 
 コンテナを停止します。
 
@@ -250,119 +265,109 @@ docker stop my-nginx
 docker run -d -p 8080:80 --name my-nginx --rm nginx:1.20
 ```
 
-### 再度、アプリケーションにアクセス、更新
+### 変更のリセットを確認
+
+再度 <walkthrough-web-preview-icon></walkthrough-web-preview-icon> から Nginx にアクセスしてリロードします。
 
 nginx のデフォルトページに戻っていることが確認できます。
 
-これで、コンテナは Immutable であり、実行時の変更を永続化しないことがわかりました。
+コンテナを再作成すると変更がリセットされて初期状態に戻ることが確認できました。
 
-### nginx コンテナを停止
+### my-nginx コンテナを停止
+
+起動したコンテナを停止しておきます。
 
 ```bash
 docker stop my-nginx
 ```
 
+## 独自コンテナイメージのビルド
 
-## 独自コンテナアプリのビルド
+### Dockerfile の確認
 
-### エディタの起動
+Cloud Shell エディタの左側のフォルダツリーから `python-app` ディレクトリを開いてください。
 
-Cloud Shell タブの上部の [エディタを開く] をクリックして、エディタを起動します。
-このエディタ画面で、ファイルの確認、編集が可能です。
-
-### ディレクトリを移動して、ファイルの内容を確認
-
-左側のフォルダツリーから、ディレクトリを移動します。
-
-```
-python-app/
-```
+以下のファイルをクリックして開いて内容を確認します。
 
 - main.py
 - Dockerfile
 
-を確認します。
+特に `Dockerfile` の内容をよく確認してください。
 
-特に Dockerfileの内容をよく確認してください。
+### コンテナイメージのビルド
 
-
-## コンテナをビルド
-
-### docker build コマンドでビルド実行
-
-先ほど確認した `Dockerfile` を使って、`docker build` コマンドからコンテナをビルドしてみましょう。
+先ほど確認した `Dockerfile` を使って、`docker build` コマンドでコンテナイメージをビルドします。
 
 ```bash
 cd ~/cloudshell_open/am-workshops/container-basic/python-app/
 docker build -t python-app .
 ```
 
-コンテナイメージの名前を `python-app` としています。
+コンテナイメージの名前 (タグ) を `python-app` としています。
 
-### ビルドしたコンテナを実行
+### python-app イメージからコンテナを起動
+
+ビルドした `python-app` イメージからコンテナを起動します。
 
 ```bash
 docker run -d -p 8080:8080 --name python-app --rm python-app
 ```
 
-`my-nginx` コンテナと同様に TCP ポート `8080`を、`python-app` の TCP ポート `8080` に転送しています。
 
+### python-app コンテナの動作確認
 
-### CloudShell の機能を利用して、起動したアプリケーションにアクセス
+画面右上にあるアイコン <walkthrough-web-preview-icon></walkthrough-web-preview-icon> をクリックして「ポート 8080 でプレビュー」を選択します。
+Nginx のページが表示される場合はリロードしてください。
 
-画面右上にあるアイコン <walkthrough-web-preview-icon></walkthrough-web-preview-icon> をクリックし、"プレビューのポート: 8080"を選択します。
-Nginxのページが表示される場合はリロードしてください。
+「Hello, GCP」が表示されていれば正常に動作しています。
 
+### python-app コンテナのログを確認
 
-### 前と同様の手順でログを確認
+`python-app` コンテナのログを確認します。
 
 ```bash
 docker logs -f python-app
 ```
 
-`Ctrl+c` で終了します。
+ログが確認できたら `Ctrl + C` で終了します。
 
-## コンテナイメージをコンテナリポジトリ (Artifact Registry) に転送
+## コンテナイメージを Artifact Registry に Push
 
-### 新しいコンテナリポジトリを作成
+### コンテナリポジトリを作成
 
-Google Cloud のコンテナレジストリサービスである Artifact Registry に、自分専用の Docker リポジトリを作成します。
+Google Cloud のコンテナレジストリサービスである Artifact Registry に新しい Docker リポジトリを作成します。
 
 ```bash
 gcloud artifacts repositories create docker-training --repository-format=docker \
 --location=asia-northeast1 --description="Docker repository for Hands-on"
 ```
 
-### コンテナレジストリ (Artifact Registry) にコンテナイメージを転送
+### python-app イメージに別名を設定
 
-今作成したコンテナレジストリの領域は以下のパスで表現されます。
+Artifact Registry におけるコンテナイメージの名前は次のようなパスで表現されます。
 
 ```
 # <ロケーション名>-docker.pkg.dev/<プロジェクトID>/<リポジトリ名>/
 asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/
 ```
 
-### ローカルでビルドしたイメージに、コンテナレジストリの名前をタグづけ
+`python-app` イメージにこちらのルールに従った別名をつけます。
 
 ```bash
 docker tag python-app asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/container-handson:v1
 ```
 
-v1というタグをつけて、バージョン管理しています。
+### python-app イメージを Push
 
-### コンテナイメージをレジストリにプッシュ
-
-まずは、CloudShell からコンテナレジストリにプッシュするための認証設定を行います。
+Cloud Shell から Artifact Registry に Push するための認証設定を行います。
 
 ```bash
 gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 ```
 
-Do you want to continue (Y/n)?
+「Do you want to continue (Y/n)?」と聞かれたら `y` を入力してください。
 
-と聞かれたら、yを入力してください
-
-コンテナイメージを、作成したコンテナレジストリに Push します。
+コンテナイメージを Artifact Registry に Push します。
 
 ```bash
 docker push asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/container-handson:v1
@@ -370,7 +375,8 @@ docker push asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/contai
 
 **GUI**: [コンテナレジストリ](https://console.cloud.google.com/artifacts/docker/{{project-id}}/asia-northeast1/docker-training/container-handson?hl=ja&project={{project-id}})
 
-コンテナをコンテナレジストリに保存して、GKEなどから利用する準備ができました。
+コンテナイメージを Artifact Registry に保存できました。
+これで、Google Kubernetes Engine や Cloud Run、または Google Cloud 外の様々な場所からコンテナイメージを利用できるようになりました。
 
 
 ## 仮想マシン上での Docker コンテナの実行
@@ -391,8 +397,7 @@ Google Compute Engine (GCE) は Google Cloud の仮想マシンサービスで�
 
 ### 仮想マシンの作成
 
-`docker-vm` という名前で、ubuntu ベースの仮想マシンを作成します。
-下記コマンドを実行します。
+`docker-vm` という名前で Ubuntu の仮想マシンを作成します。
 
 ```bash
 gcloud compute instances create \
@@ -411,25 +416,15 @@ GCE の作成は非常に高速です。
 **GUI**: [Compute Engine](https://console.cloud.google.com/compute/instances?project={{project-id}})
 
 
-### GCE に適用するファイアウォールを作成
+### ファイアウォール ルールの作成
 
-tcp:80、tcp:8000 について、全ての接続を許可します。
+80番ポートへのアクセスを許可するファイアウォール ルールを作成します。
 
 ```bash
-gcloud compute firewall-rules create default-allow-http \
+gcloud compute firewall-rules create allow-http \
 --direction=INGRESS --priority=1000 --network=default \
---action=ALLOW --rules=tcp:80,tcp:8000 --source-ranges=0.0.0.0/0 --target-tags=http-server
+--action=ALLOW --rules=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=http-server
 ```
-
-<!-- 次に、tcp:22 について、Identity-Aware Proxy (IAP) からの接続のみを許可します。
-
-```bash
-gcloud compute firewall-rules create allow-ssh-ingress-from-iap \
-  --direction=INGRESS \
-  --action=allow \
-  --rules=tcp:22 \
-  --source-ranges=35.235.240.0/20
-``` -->
 
 **GUI**: [ファイアウォール](https://console.cloud.google.com/networking/firewalls/list?project={{project-id}})
 
@@ -445,22 +440,30 @@ gcloud compute firewall-rules create allow-ssh-ingress-from-iap \
 gcloud config set project {{project-id}}
 ```
 
-### gcloud コマンドを利用した SSH 接続
+### docker-vm に SSH で接続
+
+docker-vm に SSH で接続します。
+gcloud コマンドで接続することが可能です。
 
 ```bash
 gcloud compute ssh docker-vm --zone asia-northeast1-c
 ```
 
-最初にsshのキーのパスワードを設定しますので、適当なパスワードを設定してください。
+最初に SSH キーのパスワードを設定しますので、適当なパスワードを設定してください。
 
-以降、docker-vm （GCE） で実行するコマンドには`docker-vm`、Cloud Shell で実行するコマンドは `Cloud Shell` というコメントをつけています。
+以降、docker-vm （GCE） で実行するコマンドには`[docker-vm]`、Cloud Shell で実行するコマンドは `[Cloud Shell]` というタグをつけています。
 
 ## Docker / Docker Compose のインストール
 
+**docker-vm のタブに切り替えてください**
+
 ### Docker インストール
 
+Docker をインストールします。
+
+`[docker-vm]`
+
 ```bash
-# docker-vm
 sudo apt update
 sudo apt install -y docker.io
 ```
