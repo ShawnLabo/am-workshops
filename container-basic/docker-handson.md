@@ -460,7 +460,7 @@ gcloud compute ssh docker-vm --zone asia-northeast1-c
 
 ## Docker / Docker Compose のインストール
 
-**docker-vm のタブに切り替えてください**
+**docker-vm のタブで操作してください**
 
 ### Docker インストール
 
@@ -481,19 +481,21 @@ sudo systemctl start docker
 
 ### Docker Compose インストール
 
+Docker Compose をインストールします。
+
 ```bash
-# docker-vm
 sudo curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+# [docker-vm]
 ```
 
-### 動作確認
+### インストールの確認
 
 `docker` コマンドが正常に実行できることを確認します。
 
 ```bash
-# docker-vm
 docker version
+# [docker-vm]
 ```
 
 バージョン情報が返ってこれば OK です。
@@ -501,8 +503,8 @@ docker version
 続いて、`docker-compose` についても同様に確認してみます。
 
 ```bash
-# docker-vm
 docker-compose version
+# [docker-vm]
 ```
 
 同じく、バージョン情報が表示されれば OK です。
@@ -512,6 +514,8 @@ docker-compose version
 
 ## Docker Compose で WordPress を起動
 
+**docker-vm のタブで操作してください**
+
 ### docker-compose.yamlの確認
 
 今回は、[起動スクリプト](https://cloud.google.com/compute/docs/startupscript?hl=ja)によって `/tmp/wordpress-app` に `docker-compose.yaml` を作成しています。
@@ -519,9 +523,9 @@ docker-compose version
 内容を確認します。
 
 ```bash
-# docker-vm
 cd /tmp/wordpress-app/
 cat docker-compose.yaml
+# [docker-vm]
 ```
 
 `mysql`コンテナと`wordpress`コンテナの設定が書かれていることを確認してください。
@@ -529,8 +533,8 @@ cat docker-compose.yaml
 ### WordPress の起動
 
 ```bash
-# docker-vm
 sudo docker-compose up -d
+# [docker-vm]
 ```
 
 ※ `sudo` なしで `docker` コマンドを実行できるように設定することも可能です
@@ -538,8 +542,8 @@ sudo docker-compose up -d
 ### コンテナの状態を確認
 
 ```bash
-# docker-vm
 sudo docker-compose ps
+# [docker-vm]
 ```
 
 `mysql`コンテナと`wordpress`コンテナの2つが起動している (`Up` になっている) ことがわかります。
@@ -549,12 +553,14 @@ sudo docker-compose ps
 
 ### WordPress にアクセス
 
-**Cloud Shell のタブを元の方に切り替えてから**、以下のコマンドで docker-vm の IP アドレスを取得して、WordPress の URL を表示します。
+**Cloud Shell のタブで操作してください**
+
+以下のコマンドで docker-vm の IP アドレスを取得して WordPress の URL を表示します。
 
 ```bash
-# Cloud Shell
 WWW=$(gcloud compute instances describe docker-vm --zone asia-northeast1-c --format=json | jq .networkInterfaces[].accessConfigs[].natIP -r)
-echo http://$WWW:8000
+echo http://$WWW
+# [Cloud Shell]
 ```
 
 URLをクリックしてください。
@@ -562,12 +568,14 @@ WordPress の初期設定画面が表示されることを確認してくださ�
 
 ### WordPress の停止
 
+**docker-vm のタブで操作してください**
+
 動作確認ができたら、`docker-vm` に SSH しているタブに戻ってコンテナを停止します。
 
 ```bash
-# docker-vm
 cd /tmp/wordpress-app
 sudo docker-compose down
+# [docker-vm]
 ```
 
 <walkthrough-footnote>docker-compose で DockerHub から取得したイメージを実行してみました。続いて、先ほど Artifact Registry に登録した独自コンテナイメージを実行してみましょう。</walkthrough-footnote>
@@ -576,49 +584,54 @@ sudo docker-compose down
 
 ### docker-vm に Artifact Registry の権限を付与
 
+**Cloud Shell のタブで操作してください**
+
 docker-vm から Artifact Registry に対して `docker pull` できるように権限を付与する必要があります。
 今回は、Compute Engine のサービスアカウントに、Artifact Registry の読み取り権限を付与します。
 
-**Cloud Shell のタブに切り替えてください**
-
 ```bash
-# Cloud Shell
 SERVICE_ACCOUNT=$(gcloud compute instances describe docker-vm --zone asia-northeast1-c --format=json | jq .serviceAccounts[].email -r)
 gcloud projects add-iam-policy-binding {{project-id}} \
 --member="serviceAccount:$SERVICE_ACCOUNT" --role='roles/artifactregistry.reader'
+# [Cloud Shell]
 ```
 
 **GUI**: [IAM](https://console.cloud.google.com/iam-admin/iam?project={{project-id}}&supportedpurview=project)
 
 ### docker-vm から Artifact Registry を利用するための設定
 
-**docker-vm のタブに切り替えてください**
+**docker-vm のタブで操作してください**
 
 ```bash
-# docker-vm
 sudo gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+# [docker-vm]
 ```
 
 Do you want to continue (Y/n)?
 
 と聞かれたら、yを入力してください
 
-### python-app コンテナの実行
+### container-handson コンテナイメージの実行
+
+**docker-vm のタブで操作してください**
+
+Artifact Registryにある `container-handson` イメージでコンテナを起動します。
+これは、元々 `python-app` イメージとしてビルドして Artifact Registry に Push したものです。
 
 ```bash
-# docker-vm
 sudo docker run -d -p 80:8080 --restart always asia-northeast1-docker.pkg.dev/{{project-id}}/docker-training/container-handson:v1
+# [docker-vm]
 ```
 
 ### python-app の動作確認
 
-**Cloud Shell のタブに切り替えてください**
+**Cloud Shell のタブで操作してください**
 
 docker-vm の IP アドレスを取得して URL を表示します。
 
 ```bash
-# Cloud Shell
 echo http://$WWW
+# [Cloud Shell]
 ```
 
 表示された URL をクリックしてください。
