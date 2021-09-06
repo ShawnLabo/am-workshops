@@ -1,8 +1,8 @@
 # コンテナ入門 ハンズオン
 
-## Google Cloud Platform（GCP）プロジェクトの選択
+## Google Cloud Platform プロジェクトの選択
 
-ハンズオンを行う GCP プロジェクトを選択し、 **Start** をクリックしてください。
+ハンズオンを行う Google Cloud プロジェクトを選択して **Start** をクリックしてください。
 
 <walkthrough-project-setup>
 </walkthrough-project-setup>
@@ -12,7 +12,7 @@
 下記の内容をハンズオン形式で学習します。
 
 1. 環境準備：10 分
-2. CloudShell 上での Docker の基本操作：15分
+2. Cloud Shell 上での Docker の基本操作：15分
 3. 仮想マシン上での Docker コンテナの実行：15分
 
 ## 環境準備
@@ -24,27 +24,30 @@
 下記の設定を進めていきます。
 
 - gcloud コマンドラインツール設定
-- GCP 機能（API）有効化設定
+- Google Cloud サービス有効化
 
 
-## gcloud コマンドラインツール
+## gcloud コマンドラインツール設定
 
-GCP は、CLI、GUI から操作が可能です。ハンズオンでは主に CLI を使い作業を行いますが、GUI で確認する URL も合わせて掲載します。
+Google Cloud は、CLI や GUI から操作が可能です。
+ハンズオンでは主に CLI で作業を行いますが、GUI で確認する URL も合わせて掲載します。
 
 ### gcloud コマンドラインツールとは?
 
-gcloud コマンドライン インターフェースは、GCP でメインとなる CLI ツールです。このツールを使用すると、コマンドラインから、またはスクリプトや他の自動化により、多くの一般的なプラットフォーム タスクを実行できます。
+gcloud は Google Cloud の主要な CLI ツールです。
+gcloud を使用するとコマンドラインから Google Cloud を操作できます。
+またはスクリプトに組み込んだり様々な自動化ツールと組み合わせることにより、多くのタスクを実行できます。
 
-たとえば、gcloud CLI を使用して、以下のようなものを作成、管理できます。
+たとえば、gcloud を使用して、以下のようなものを作成・管理できます。
 
 - Google Compute Engine 仮想マシン
 - Google Kubernetes Engine クラスタ
-- Google Cloud SQL インスタンス
+- Cloud SQL インスタンス
 
 **ヒント**: gcloud コマンドラインツールについての詳細は[こちら](https://cloud.google.com/sdk/gcloud?hl=ja)をご参照ください。
 
 
-## gcloud コマンドラインツール設定 - プロジェクト
+### デフォルトプロジェクトの設定
 
 gcloud コマンドでは操作の対象とするプロジェクトの指定が必要です。
 
@@ -54,14 +57,11 @@ gcloudのデフォルトプロジェクトとして、操作対象のプロジ�
 gcloud config set project {{project-id}}
 ```
 
-<walkthrough-footnote>これで、gcloud コマンドを実行する際に、毎回プロジェクトを指定しなくて済むようになりました。続いて、API の有効化を行います。</walkthrough-footnote>
+## Google Cloud サービス有効化
 
-## GCP 環境設定
+Google Cloud では利用したいサービスごとに有効化が必要です。
 
-GCP では利用したい機能ごとに、有効化を行う必要があります。
-ここでは、以降のハンズオンで利用する機能を事前に有効化しておきます。
-
-### ハンズオンで利用する GCP の API を有効化する
+以降のハンズオンで利用する機能を事前に有効化しておきます。
 
 ```bash
 gcloud services enable compute.googleapis.com cloudbuild.googleapis.com sourcerepo.googleapis.com artifactregistry.googleapis.com cloudresourcemanager.googleapis.com container.googleapis.com stackdriver.googleapis.com 
