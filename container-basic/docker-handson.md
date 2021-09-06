@@ -324,7 +324,7 @@ python-app/
 先ほど確認した `Dockerfile` を使って、`docker build` コマンドからコンテナをビルドしてみましょう。
 
 ```bash
-cd ~/cloudshell_open/am-workshops-1/container-basic/python-app/
+cd ~/cloudshell_open/am-workshops/container-basic/python-app/
 docker build -t python-app .
 ```
 
