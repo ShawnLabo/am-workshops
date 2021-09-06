@@ -425,7 +425,13 @@ Google Compute Engine (GCE) は Google Cloud の仮想マシンサービスで�
 下記コマンドを実行します。
 
 ```bash
-gcloud compute instances create --image=ubuntu-minimal-1804-bionic-v20200703a --machine-type=n1-standard-1 --image-project=ubuntu-os-cloud --tags=http-server --metadata=startup-script-url=http://bit.ly/gcp0716-script docker-vm
+gcloud compute instances create \
+  --image=ubuntu-minimal-1804-bionic-v20200703a \
+  --machine-type=n1-standard-1 \
+  --image-project=ubuntu-os-cloud \
+  --tags=http-server \
+  --metadata=startup-script-url=https://raw.githubusercontent.com/ShawnLabo/am-workshops/main/container-basic/startup-script.sh \
+  docker-vm
 ```
 
 作成まで待ちます（10秒程度）。
